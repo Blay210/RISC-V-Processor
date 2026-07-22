@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module pc_reg #(
+module program_counter #(
     parameter word_t RESET_VECTOR = '0
 )(
     // ============ input ============
