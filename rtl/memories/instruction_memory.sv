@@ -4,7 +4,10 @@ module instruction_memory #(
     parameter int    DEPTH         = 256,
     parameter string PROGRAM_FILE  = "program.hex"
 ) (
+    // =============== input  ===============
     input  riscv_pkg::word_t pc,
+
+    // =============== output ===============
     output riscv_pkg::word_t inst
 );
 
