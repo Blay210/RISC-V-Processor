@@ -1,0 +1,4 @@
+{
+    "verilog.linting.verilator.arguments": "--file-list verilator.f",
+    "verilog.linting.linter": "verilator"
+}
