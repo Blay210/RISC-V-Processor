@@ -1,4 +1,4 @@
 {
-    "verilog.linting.verilator.arguments": "--file-list verilator.f",
-    "verilog.linting.linter": "verilator"
+    "verilog.linting.linter": "slang",
+    "verilog.linting.slang.arguments": "-f verilog.f"
 }

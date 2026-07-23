@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 module program_counter #(
-    parameter word_t RESET_VECTOR = '0
+    parameter riscv_pkg::word_t RESET_VECTOR = '0
 )(
     // ============ input ============
     input  logic             clk,
