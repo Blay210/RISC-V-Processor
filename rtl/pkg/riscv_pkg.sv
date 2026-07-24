@@ -12,6 +12,7 @@ package riscv_pkg;
     typedef logic [6:0] opcode_bits_t;
     typedef logic [2:0] funct3_t;
     typedef logic [6:0] funct7_t;
+    typedef logic [7:0] byte_t;
 
     localparam reg_addr_t X0 ='0;
 
