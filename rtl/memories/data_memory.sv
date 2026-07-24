@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 
+// just for lw and sw operations
 module data_memory #(
     parameter int DEPTH = 256
 )(
