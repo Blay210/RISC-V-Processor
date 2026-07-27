@@ -83,6 +83,13 @@ package riscv_pkg;
         WB_PC_4
     } wb_sel_t;
 
+    typedef enum logic [1:0] {
+        PC_NEXT_4,
+        PC_NEXT_BRANCH,
+        PC_NEXT_JAL,
+        PC_NEXT_JALR
+    } pc_sel_t;
+
     
     
     typedef struct packed {
@@ -103,9 +110,8 @@ package riscv_pkg;
         logic     reg_write;
         logic     mem_read;
         logic     mem_write;
-        logic     branch;
-        logic     jump;
 
+        pc_sel_t  pc_sel;
         imm_sel_t imm_sel;
         wb_sel_t  wb_sel;
         alu_src_t alu_src;

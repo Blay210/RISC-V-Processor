@@ -68,30 +68,30 @@ module control_unit (
             end
 
             OPCODE_BRANCH: begin
-                control.branch    = 1'b1;
-                control.alu_src.a = ALU_A_RS1;
-                control.alu_src.b = ALU_B_RS2;
+                control.pc_sel    = PC_NEXT_BRANCH;
+                control.alu_src.a = ALU_A_PC;
+                control.alu_src.b = ALU_B_IMM;
                 control.imm_sel   = IMM_B;
-                control.alu_op    = ALU_OP_BRANCH;
+                control.alu_op    = ALU_OP_ADD;
             end
 
             OPCODE_JALR: begin
                 control.reg_write = 1'b1;
-                control.jump      = 1'b1;
+                control.pc_sel    = PC_NEXT_JALR;
                 control.alu_src.a = ALU_A_RS1;
                 control.alu_src.b = ALU_B_IMM;
                 control.imm_sel   = IMM_I;
-                control.wb_sel    = WB_PC_PLUS_4;
+                control.wb_sel    = WB_PC_4;
                 control.alu_op    = ALU_OP_ADD;
             end
 
             OPCODE_JAL: begin
                 control.reg_write = 1'b1;
-                control.jump      = 1'b1;
+                control.pc_sel    = PC_NEXT_JAL;
                 control.alu_src.a = ALU_A_PC;
                 control.alu_src.b = ALU_B_IMM;
                 control.imm_sel   = IMM_J;
-                control.wb_sel    = WB_PC_PLUS_4;
+                control.wb_sel    = WB_PC_4;
                 control.alu_op    = ALU_OP_ADD;
             end
             
