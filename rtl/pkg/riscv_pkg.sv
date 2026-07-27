@@ -7,14 +7,21 @@ package riscv_pkg;
     localparam logic [6:0] FUNCT7_BASE = 7'b0000000;
     localparam logic [6:0] FUNCT7_ALT  = 7'b0100000;
 
+
     typedef logic [REG_ADDR_WIDTH-1:0] reg_addr_t;
     typedef logic [XLEN-1:0] word_t;
     typedef logic [6:0] opcode_bits_t;
     typedef logic [2:0] funct3_t;
     typedef logic [6:0] funct7_t;
 
-    localparam reg_addr_t X0 ='0;
 
+    localparam reg_addr_t X0 ='0;
+    localparam funct3_t FUNCT3_BEQ  = 3'b000;
+    localparam funct3_t FUNCT3_BNE  = 3'b001;
+    localparam funct3_t FUNCT3_BLT  = 3'b100;
+    localparam funct3_t FUNCT3_BGE  = 3'b101;
+    localparam funct3_t FUNCT3_BLTU = 3'b110;
+    localparam funct3_t FUNCT3_BGEU = 3'b111;
 
 
     typedef enum logic [6:0] {
