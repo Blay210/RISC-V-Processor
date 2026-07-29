@@ -22,5 +22,6 @@ rtl/pkg/riscv_pkg.sv
 -y rtl
 -y rtl/stages
 -y rtl/units
+-y rtl/units/branch_unit
 -y rtl/memories
 -y rtl/programs
