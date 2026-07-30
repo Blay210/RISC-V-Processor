@@ -38,7 +38,9 @@ module if_stage (
         .pc(pc)
     );
 
-    instruction_memory instruction_memory (
+    instruction_memory #(
+        .PROGRAM_FILE("rtl/programs/program.hex")
+    ) instruction_memory (
         // ========== input  ==========
         .pc(pc),
         // ========== output ==========
