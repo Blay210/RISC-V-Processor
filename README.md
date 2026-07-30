@@ -1,5 +1,12 @@
 # RISC-V Processor
 
+## Project Settings
+```
+Linter : Slang
+Simulation : Verilator
+Wave : GTKWave
+```
+
 ## Project Architecture
 ```
 rtl/
@@ -99,23 +106,3 @@ endmodule
 
 
 ## Use System Verilog Style!
-
-
-## Simulation
-#### Iverilog
-```
-# 1. 컴파일 (verilator.f 파일과 테스트벤치를 묶어서 sim.out 생성)
-iverilog -g2012 -o sim.out -f verilator.f testbench/tb_top.sv
-
-# 2. 시뮬레이션 실행 (wave.vcd 파형 파일 자동 생성)
-vvp sim.out
-
-# 3. GTKWave로 파형 열기
-gtkwave wave.vcd
-```
-
-
-#### Verilator
-
-
-#### XSIM(VIVADO)
