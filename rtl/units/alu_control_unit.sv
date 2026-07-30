@@ -28,9 +28,11 @@ module alu_control_unit (
             ALU_OP_REG: begin
                 unique case (funct3)
                     3'b000: begin
-                        alu_ctrl = (funct7 == FUNCT7_BASE)
-                                 ? ALU_ADD
-                                 : ALU_SUB;
+                        unique case (funct7)
+                            FUNCT7_BASE: alu_ctrl = ALU_ADD;
+                            FUNCT7_ALT:  alu_ctrl = ALU_SUB;
+                            default:     alu_ctrl = ALU_ADD;
+                        endcase
                     end
 
                     3'b001: begin
@@ -50,9 +52,11 @@ module alu_control_unit (
                     end
 
                     3'b101: begin
-                        alu_ctrl = (funct7 == FUNCT7_BASE)
-                                 ? ALU_SRL
-                                 : ALU_SRA;
+                        unique case (funct7)
+                            FUNCT7_BASE: alu_ctrl = ALU_SRL;
+                            FUNCT7_ALT:  alu_ctrl = ALU_SRA;
+                            default:     alu_ctrl = ALU_SRL;
+                        endcase
                     end
 
                     3'b110: begin
@@ -92,9 +96,11 @@ module alu_control_unit (
                     end
 
                     3'b101: begin
-                        alu_ctrl = (funct7 == FUNCT7_BASE)
-                                 ? ALU_SRL
-                                 : ALU_SRA;
+                        unique case (funct7)
+                            FUNCT7_BASE: alu_ctrl = ALU_SRL;
+                            FUNCT7_ALT:  alu_ctrl = ALU_SRA;
+                            default:     alu_ctrl = ALU_SRL;
+                        endcase
                     end
 
                     3'b110: begin

@@ -2,9 +2,9 @@
 
 module control_unit (
     // ============== input  ==============
-    input  riscv_pkg::opcode_t  opcode,
+    input  riscv_pkg::opcode_bits_t opcode,
     // ============== output ==============
-    output riscv_pkg::control_t control
+    output riscv_pkg::control_t     control
 );
 
     import riscv_pkg::*;

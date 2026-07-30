@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module moduleName (
+module alu (
     // ============== input  ==============
     input  riscv_pkg::word_t     operand_a,
     input  riscv_pkg::word_t     operand_b,
@@ -21,7 +21,7 @@ module moduleName (
         result = '0;
         
         unique case (alu_ctrl)
-            ALU_AND: begin
+            ALU_ADD: begin
                 result = operand_a + operand_b;
             end
 
@@ -50,7 +50,7 @@ module moduleName (
             end
 
             ALU_SRA: begin
-                result = signed'(operand_a) >> shamt;
+                result = $signed(operand_a) >>> shamt;
             end
 
             ALU_SLT: begin
