@@ -5,6 +5,7 @@ module data_memory #(
     parameter int DEPTH = 256
 )(
     input  logic clk,
+    input  logic rst_n,
     input  logic mem_write,
     input  logic mem_read,
     input  riscv_pkg::word_t addr,
@@ -16,18 +17,21 @@ module data_memory #(
     import riscv_pkg::*;
 
     word_t memory [0:DEPTH-1];
-
     logic [$clog2(DEPTH)-1:0] word_addr;
-    assign word_addr = addr[$clog2(DEPTH)+1:2];
 
-    always_ff @(posedge clk) begin
-        if (mem_write) begin
+    assign word_addr = addr[$clog2(DEPTH)+1:2];
+    assign read_data = mem_read
+                     ? memory[word_addr]
+                     : '0;
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            // nothing
+        end
+        else if (mem_write) begin
             memory[word_addr] <= write_data;
         end
     end
 
-    assign read_data = mem_read
-                     ? memory[word_addr]
-                     : '0;
 
 endmodule

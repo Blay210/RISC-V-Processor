@@ -9,8 +9,8 @@ module instruction_decoder (
 );
 
     assign decoded_inst = '{
-        opcode : inst[6:0],
-        rd     : inst[11:7],
+        opcode : inst[ 6: 0],
+        rd     : inst[11: 7],
         funct3 : inst[14:12],
         rs1    : inst[19:15],
         rs2    : inst[24:20],

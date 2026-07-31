@@ -3,6 +3,7 @@
 module register_file (
     // ============ input ============
     input  logic clk,
+    input  logic rst_n,
     input  logic reg_write,
 
     input  riscv_pkg::reg_addr_t rs1_addr,
@@ -31,8 +32,11 @@ module register_file (
                     : registers[rs2_addr];
 
 
-    always_ff @(posedge clk) begin
-        if (reg_write && (rd_addr != X0)) begin
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            // nothing
+        end
+        else if (reg_write && (rd_addr != X0)) begin
             registers[rd_addr] <= rd_data;
         end
     end

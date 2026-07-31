@@ -3,6 +3,7 @@
 module mem_stage (
     // ============= input  =============
     input logic clk,
+    input logic rst_n,
     input riscv_pkg::control_t control,
     input riscv_pkg::word_t alu_result,
     input riscv_pkg::word_t rs2_data,
@@ -15,6 +16,7 @@ module mem_stage (
     data_memory data_memory (
         // ========== input  ==========
         .clk(clk),
+        .rst_n(rst_n),
         .mem_write(control.mem_write),
         .mem_read(control.mem_read),
         .addr(alu_result),

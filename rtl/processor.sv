@@ -40,6 +40,7 @@ module processor (
     id_stage u_id_stage (
         // ========== input  ==========
         .clk(clk),
+        .rst_n(rst_n),
         .wb_reg_write(control.reg_write),
         .raw_inst(raw_inst),
         .wb_rd_data(wb_data),
@@ -73,6 +74,7 @@ module processor (
     mem_stage u_mem_stage (
         // ========== input  ==========
         .clk(clk),
+        .rst_n(rst_n),
         .control(control),
         .alu_result(alu_result),
         .rs2_data(rs2_data),

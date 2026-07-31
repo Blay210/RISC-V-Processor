@@ -3,6 +3,7 @@
 module id_stage (
     // ============= input  =============
     input  logic clk,
+    input  logic rst_n,
     input  logic wb_reg_write,
     input  riscv_pkg::word_t     raw_inst,
     input  riscv_pkg::word_t     wb_rd_data,
@@ -36,6 +37,7 @@ module id_stage (
 
     control_unit control_unit (
         // ========== input  ==========
+        .rst_n(rst_n),
         .opcode(decoded_inst.opcode),
         // ========== output ==========
         .control(control)
@@ -44,6 +46,7 @@ module id_stage (
     register_file register_file (
         // ========== input  ==========
         .clk(clk),
+        .rst_n(rst_n),
         .rd_addr(wb_rd_addr),
         .rd_data(wb_rd_data),
         .reg_write(wb_reg_write),
