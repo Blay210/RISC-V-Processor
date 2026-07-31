@@ -11,6 +11,7 @@ module control_unit (
     import riscv_pkg::*;
 
     always_comb begin
+        control = '0;
         if (!rst_n) begin
             control = '0;
         end

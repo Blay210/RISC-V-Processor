@@ -2,7 +2,7 @@
 
 // just for lw and sw operations
 module data_memory #(
-    parameter int DEPTH = 256
+    parameter int DEPTH = 10
 )(
     input  logic clk,
     input  logic rst_n,

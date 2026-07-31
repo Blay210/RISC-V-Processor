@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tb_processor_1;
+module tb_processor;
 
     logic clk;
     logic rst_n;
@@ -12,7 +12,7 @@ module tb_processor_1;
 
     initial begin
         $dumpfile("build/cpu.fst");
-        $dumpvars(0, tb_processor_1);
+        $dumpvars(0, tb_processor);
     end
 
     //----------------------------------------------------------
@@ -40,25 +40,26 @@ module tb_processor_1;
     //----------------------------------------------------------
 
     initial begin
-        #200;
+        repeat (1000) @(posedge clk);
 
         $display("");
         $display("==============================");
         $display("Register Dump");
         $display("==============================");
 
-        $display("x1 = %0d",
-            dut.u_id_stage.register_file.registers[1]);
+        assert (dut.u_id_stage.register_file.registers[3] == 32'd15)
+            else $fatal("x3 mismatch");
 
-        $display("x2 = %0d",
-            dut.u_id_stage.register_file.registers[2]);
+        assert (dut.u_id_stage.register_file.registers[4] == 32'd15)
+            else $fatal("x4 mismatch");
 
-        $display("x3 = %0d",
-            dut.u_id_stage.register_file.registers[3]);
+        assert (dut.u_id_stage.register_file.registers[5] == 32'd100)
+            else $fatal("x5 mismatch");
 
-        $display("x4 = %0d",
-            dut.u_id_stage.register_file.registers[4]);
+        assert (dut.u_id_stage.register_file.registers[7] == 32'd77)
+            else $fatal("x7 mismatch");
 
+        $display("Complex program test passed");
         $finish;
     end
 

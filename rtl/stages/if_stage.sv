@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 
-module if_stage (
+module if_stage #(
+        parameter string PROGRAM_FILE = "rtl/programs/program.hex"
+    ) (
     // ============= input  =============
     input logic clk,
     input logic rst_n,
@@ -39,7 +41,7 @@ module if_stage (
     );
 
     instruction_memory #(
-        .PROGRAM_FILE("rtl/programs/program.hex")
+        .PROGRAM_FILE(PROGRAM_FILE)
     ) instruction_memory (
         // ========== input  ==========
         .pc(pc),

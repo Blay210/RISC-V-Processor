@@ -8,7 +8,6 @@ module processor (
     import riscv_pkg::*;
 
     logic branch_taken;
-    logic zero;
 
     word_t target;
     word_t raw_inst;
@@ -24,7 +23,9 @@ module processor (
     funct3_t funct3;
     funct7_t funct7;
     
-    if_stage u_if_stage (
+    if_stage #(
+        .PROGRAM_FILE("rtl/programs/program.hex")
+    ) u_if_stage (
         // ========== input  ==========
         .clk(clk),
         .rst_n(rst_n),
@@ -67,7 +68,6 @@ module processor (
         // ========== output ==========
         .alu_result(alu_result),
         .target(target),
-        .zero(zero),
         .branch_taken(branch_taken)
     );
 
@@ -90,7 +90,6 @@ module processor (
         .control(control),
         // ============= output =============
         .wb_data(wb_data)
-
     );
 
 endmodule

@@ -6,8 +6,7 @@ module alu (
     input  riscv_pkg::word_t     operand_b,
     input  riscv_pkg::alu_ctrl_t alu_ctrl,
     // ============== output ==============
-    output riscv_pkg::word_t     result,
-    output logic                 zero
+    output riscv_pkg::word_t     result
 );
 
     import riscv_pkg::*;
@@ -15,7 +14,6 @@ module alu (
     logic [4:0] shamt;
 
     assign shamt = operand_b[4:0];
-    assign zero = (result == '0);
 
     always_comb begin
         result = '0;

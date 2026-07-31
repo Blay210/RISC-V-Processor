@@ -47,8 +47,7 @@ module ex_stage (
         .operand_b(operand_b),
         .alu_ctrl(alu_ctrl),
         // ========== output ==========
-        .result(alu_result),
-        .zero(zero)
+        .result(alu_result)
     );
 
     // branch module
