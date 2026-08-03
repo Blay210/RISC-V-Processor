@@ -17,12 +17,14 @@ UNITS        := $(shell find rtl/units -type f -name "*.sv" | sort)
 MEMORIES     := $(shell find rtl/memories -type f -name "*.sv" | sort)
 STAGES       := $(shell find rtl/stages -type f -name "*.sv" | sort)
 PIPELINES    := $(shell find rtl/pipelines -type f -name "*.sv" | sort)
+HAZARD       := $(shell find rtl/hazard -type f -name "*.sv" | sort)
 
 RTL_FILES    := \
 	$(UNITS) \
 	$(MEMORIES) \
 	$(STAGES) \
 	$(PIPELINES) \
+	$(HAZARD) \
 	rtl/processor.sv
 
 TB_FILE      := sim/$(TOP).sv

@@ -21,10 +21,6 @@ module alu_control_unit (
                 alu_ctrl = ALU_ADD;
             end
 
-            ALU_OP_BRANCH: begin
-                alu_ctrl = ALU_SUB;
-            end
-
             ALU_OP_REG: begin
                 unique case (funct3)
                     3'b000: begin

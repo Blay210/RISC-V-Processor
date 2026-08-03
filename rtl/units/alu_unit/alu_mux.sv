@@ -1,9 +1,9 @@
 `timescale 1ns/1ps
 
 module alu_mux (
+    input  riscv_pkg::word_t    pc,
     input  riscv_pkg::word_t    rs1,
     input  riscv_pkg::word_t    rs2,
-    input  riscv_pkg::word_t    pc,
     input  riscv_pkg::word_t    immediate,
     input  riscv_pkg::alu_src_t alu_src,
 

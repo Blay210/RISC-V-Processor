@@ -6,6 +6,7 @@ module if_stage #(
     // ============= input  =============
     input logic clk,
     input logic rst_n,
+    input logic load_use_stall,
     input logic redirect_valid,
     input riscv_pkg::word_t redirect_pc,
     
@@ -18,12 +19,13 @@ module if_stage #(
 
     // ================ internal signal ================
     word_t pc, pc4, next_pc;
-
+    logic pc_stall;
 
     assign pc4 = pc + word_t'(4);
     assign if_id.valid = 1;
     assign if_id.pc    = pc;
     assign if_id.pc4   = pc4;
+    assign pc_stall    = load_use_stall  && !redirect_valid;
 
     
     next_pc_logic next_pc_logic (
@@ -39,6 +41,7 @@ module if_stage #(
         // ========== input  ==========
         .clk(clk),
         .rst_n(rst_n),
+        .stall(pc_stall),
         .next_pc(next_pc),
         // ========== output ==========
         .pc(pc)

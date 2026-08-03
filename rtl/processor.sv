@@ -24,23 +24,27 @@ module processor (
     ex_mem_t ex_mem_d, ex_mem_q;
     mem_wb_t mem_wb_d, mem_wb_q;
 
-    word_t wb_data;
+    word_t wb_data, mem_fwd_data;
+    
+    logic  load_use_stall;
+    forward_sel_t forward_a, forward_b;
 
-    assign if_id_stall  = 1'b0;
-    assign id_ex_stall  = 1'b0;
-    assign ex_mem_stall = 1'b0;
-    assign mem_wb_stall = 1'b0;
+    assign if_id_stall   = load_use_stall;
+    assign id_ex_stall   = 1'b0;
+    assign ex_mem_stall  = 1'b0;
+    assign mem_wb_stall  = 1'b0;
 
-    assign if_id_flush  = redirect_valid;
-    assign id_ex_flush  = redirect_valid;
-    assign ex_mem_flush = 1'b0;
-    assign mem_wb_flush = 1'b0;
+    assign if_id_flush   = redirect_valid;
+    assign id_ex_flush   = load_use_stall || redirect_valid;
+    assign ex_mem_flush  = 1'b0;
+    assign mem_wb_flush  = 1'b0;
     
     if_stage #(
         .PROGRAM_FILE("rtl/programs/program.hex")
     ) u_if_stage (
         .clk(clk),
         .rst_n(rst_n),
+        .load_use_stall(load_use_stall),
         // ========== input  ==========
         .redirect_valid(redirect_valid),
         .redirect_pc(redirect_pc),
@@ -82,6 +86,10 @@ module processor (
     ex_stage u_ex_stage (
         // ========== input  ==========
         .id_ex_in(id_ex_q),
+        .mem_fwd_data(mem_fwd_data),
+        .wb_fwd_data(wb_data),
+        .forward_a(forward_a),
+        .forward_b(forward_b),
         // ========== output ==========
         .ex_mem_out(ex_mem_d),
         .redirect_pc(redirect_pc),
@@ -122,6 +130,31 @@ module processor (
         .mem_wb_in(mem_wb_q),
         // ============= output =============
         .wb_data(wb_data)
+    );
+
+    forwarding_unit u_forwarding_unit (
+        // ============= input  =============
+        .id_ex(id_ex_q),
+        .ex_mem(ex_mem_q),
+        .mem_wb(mem_wb_q),
+        // ============= output =============
+        .forward_a(forward_a),
+        .forward_b(forward_b)
+    );
+
+    ex_mem_forward_mux u_ex_mem_forward_mux (
+        // ============= input  =============
+        .ex_mem(ex_mem_q),
+        // ============= output =============
+        .forward_data(mem_fwd_data)
+    );
+
+    hazard_detection_unit u_hazard_detection_unit (
+        // ============= input  =============
+        .if_id(if_id_q),
+        .id_ex(id_ex_q),
+        // ============= output =============
+        .load_use_stall(load_use_stall)
     );
 
 endmodule

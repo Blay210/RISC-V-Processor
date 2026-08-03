@@ -87,17 +87,12 @@ module control_unit (
                 OPCODE_BRANCH: begin
                     pc_sel  = PC_NEXT_BRANCH;
                     imm_sel = IMM_B;
-                    ex_ctrl.alu_src.a = ALU_A_PC;
-                    ex_ctrl.alu_src.b = ALU_B_IMM;
-                    ex_ctrl.alu_op    = ALU_OP_ADD;
                 end
 
                 OPCODE_JALR: begin
                     pc_sel  = PC_NEXT_JALR;
                     imm_sel = IMM_I;
-                    ex_ctrl.alu_src.a = ALU_A_RS1;
-                    ex_ctrl.alu_src.b = ALU_B_IMM;
-                    ex_ctrl.alu_op    = ALU_OP_ADD;
+
                     wb_ctrl.wb_sel    = WB_PC_4;
                     wb_ctrl.reg_write = 1'b1;
                 end
@@ -105,9 +100,7 @@ module control_unit (
                 OPCODE_JAL: begin
                     pc_sel  = PC_NEXT_JAL;
                     imm_sel = IMM_J;
-                    ex_ctrl.alu_src.a = ALU_A_PC;
-                    ex_ctrl.alu_src.b = ALU_B_IMM;
-                    ex_ctrl.alu_op    = ALU_OP_ADD;
+
                     wb_ctrl.wb_sel    = WB_PC_4;
                     wb_ctrl.reg_write = 1'b1;
                 end

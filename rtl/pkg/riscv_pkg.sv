@@ -50,7 +50,6 @@ package riscv_pkg;
 
     typedef enum logic [2:0] {
         ALU_OP_ADD,
-        ALU_OP_BRANCH,
         ALU_OP_REG,
         ALU_OP_IMM
     } alu_op_t;
@@ -92,6 +91,13 @@ package riscv_pkg;
         PC_NEXT_JALR
     } pc_sel_t;
 
+
+    typedef enum logic[1:0] {
+        FWD_NONE,
+        FWD_EXMEM,
+        FWD_MEMWB
+    } forward_sel_t;
+
     
     
     typedef struct packed {
@@ -107,6 +113,8 @@ package riscv_pkg;
         alu_src_a_t a;
         alu_src_b_t b;
     } alu_src_t;
+
+
 
 
     // ===================================================
@@ -127,15 +135,14 @@ package riscv_pkg;
         wb_sel_t wb_sel;
     } wb_ctrl_t;
     // ===================================================
-    // ===================================================
+
 
 
     // ===================================================
     //                 pipeline register
     // ===================================================
     typedef struct packed {
-        logic valid;
-
+        logic  valid;
         word_t pc;
         word_t pc4;
         word_t inst;
@@ -192,6 +199,8 @@ package riscv_pkg;
     } mem_wb_t;
 
     // ===================================================
-    // ===================================================
+
+
+
 
 endpackage

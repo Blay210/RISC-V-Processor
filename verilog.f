@@ -22,6 +22,7 @@ rtl/pkg/riscv_pkg.sv
 -y rtl
 -y rtl/stages
 -y rtl/pipelines
+-y rtl/hazard
 -y rtl/units
 -y rtl/units/alu_unit
 -y rtl/units/control_flow_unit

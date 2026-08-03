@@ -4,9 +4,9 @@ module program_counter #(
     parameter riscv_pkg::word_t RESET_VECTOR = '0
 )(
     // ============ input ============
-    input  logic             clk,
-    input  logic             rst_n,
-
+    input  logic clk,
+    input  logic rst_n,
+    input  logic stall,
     input  riscv_pkg::word_t next_pc,
 
     // ============ output ============
@@ -16,7 +16,7 @@ module program_counter #(
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             pc <= RESET_VECTOR;
-        else
+        else if (!stall)
             pc <= next_pc;
     end
 

@@ -2,7 +2,13 @@
 
 module pc_control_unit (
     // ============= input  =============
-    input riscv_pkg::id_ex_t id_ex,
+    input logic valid,
+    input riscv_pkg::word_t   pc,
+    input riscv_pkg::word_t   forwarded_rs1,
+    input riscv_pkg::word_t   forwarded_rs2,
+    input riscv_pkg::word_t   immediate,
+    input riscv_pkg::funct3_t funct3,
+    input riscv_pkg::pc_sel_t pc_sel,
     // ============= output =============
     output logic redirect_valid,
     output riscv_pkg::word_t redirect_pc
@@ -18,8 +24,8 @@ module pc_control_unit (
         redirect_valid = 1'b0;
         redirect_pc    = pc_target;
 
-        if (id_ex.valid) begin
-            unique case (id_ex.pc_sel)
+        if (valid) begin
+            unique case (pc_sel)
                 PC_NEXT_BRANCH: begin
                     redirect_valid = branch_taken;
                 end
@@ -39,19 +45,19 @@ module pc_control_unit (
 
     branch_comparator branch_comparator (
         // ========== input  ==========
-        .rs1_data(id_ex.rs1_data),
-        .rs2_data(id_ex.rs2_data),
-        .funct3(id_ex.funct3),
+        .rs1_data(forwarded_rs1),
+        .rs2_data(forwarded_rs2),
+        .funct3(funct3),
         // ========== output ==========
         .branch_taken(branch_taken)
     );
 
     pc_target_generator pc_target_generator (
         // ========== input  ==========
-        .pc(id_ex.pc),
-        .pc_sel(id_ex.pc_sel),
-        .rs1_data(id_ex.rs1_data),
-        .immediate(id_ex.immediate),
+        .pc(pc),
+        .pc_sel(pc_sel),
+        .rs1_data(forwarded_rs1),
+        .immediate(immediate),
         // ========== output ==========
         .pc_target(pc_target)
     );
