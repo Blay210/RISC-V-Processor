@@ -106,3 +106,36 @@ endmodule
 
 
 ## Use System Verilog Style!
+
+
+
+## Needed Signal for each Stages
+#### if stage  
+- branch taken  
+- target pc  
+- pc selection(mux)  
+  
+#### id stage  
+- reg write(from WB)  
+- wb data  
+- rd address  
+
+#### ex stage  
+- pc  
+- rs1 data  
+- rs2 data  
+- immediate  
+- funct3  
+- funct7  
+
+#### mem stage
+- mem write  
+- mem read  
+- alu result  
+- rs2 data  
+
+#### wb stage
+- alu result  
+- mem data  
+- pc + 4  
+- wb sel

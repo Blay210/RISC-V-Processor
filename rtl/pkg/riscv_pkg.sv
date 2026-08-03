@@ -108,17 +108,90 @@ package riscv_pkg;
         alu_src_b_t b;
     } alu_src_t;
 
+
+    // ===================================================
+    //              pipeline control signals
+    // ===================================================
     typedef struct packed {
-        logic     reg_write;
-        logic     mem_read;
-        logic     mem_write;
-
-        pc_sel_t  pc_sel;
-        imm_sel_t imm_sel;
-        wb_sel_t  wb_sel;
-        alu_src_t alu_src;
         alu_op_t  alu_op;
-    } control_t;
+        alu_src_t alu_src;
+    } ex_ctrl_t;
 
+    typedef struct packed {
+        logic mem_read;
+        logic mem_write;
+    } mem_ctrl_t;
+
+    typedef struct packed {
+        logic    reg_write;
+        wb_sel_t wb_sel;
+    } wb_ctrl_t;
+    // ===================================================
+    // ===================================================
+
+
+    // ===================================================
+    //                 pipeline register
+    // ===================================================
+    typedef struct packed {
+        logic valid;
+
+        word_t pc;
+        word_t pc4;
+        word_t inst;
+
+    } if_id_t;
+
+    typedef struct packed {
+        logic valid;
+
+        word_t pc;
+        word_t pc4;
+
+        word_t rs1_data;
+        word_t rs2_data;
+        word_t immediate;
+
+        reg_addr_t rs1_addr;
+        reg_addr_t rs2_addr;
+        reg_addr_t rd_addr;
+
+        funct3_t funct3;
+        funct7_t funct7;
+
+        pc_sel_t   pc_sel;
+        ex_ctrl_t  ex_ctrl;
+        mem_ctrl_t mem_ctrl;
+        wb_ctrl_t  wb_ctrl;
+
+    } id_ex_t;
+
+    typedef struct packed {
+        logic valid;
+
+        word_t     pc4;
+        word_t     alu_result;
+        word_t     store_data;
+        reg_addr_t rd_addr;
+
+        mem_ctrl_t mem_ctrl;
+        wb_ctrl_t  wb_ctrl;
+
+    } ex_mem_t;
+
+    typedef struct packed {
+        logic valid;
+
+        word_t     pc4;
+        word_t     mem_data;
+        word_t     alu_result;
+        reg_addr_t rd_addr;
+
+        wb_ctrl_t  wb_ctrl;
+
+    } mem_wb_t;
+
+    // ===================================================
+    // ===================================================
 
 endpackage

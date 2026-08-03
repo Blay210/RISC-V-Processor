@@ -2,40 +2,49 @@
 
 module ex_stage (
     // ============= input  =============
-    input  riscv_pkg::control_t control,
-    input  riscv_pkg::word_t    pc,
-    input  riscv_pkg::word_t    rs1_data,
-    input  riscv_pkg::word_t    rs2_data,
-    input  riscv_pkg::word_t    immediate,
-    input  riscv_pkg::funct3_t  funct3,
-    input  riscv_pkg::funct7_t  funct7,
+    input  riscv_pkg::id_ex_t id_ex_in,
 
     // ============= output =============
-    output riscv_pkg::word_t alu_result,
-    output riscv_pkg::word_t target,
-    output logic zero,
-    output logic branch_taken
+    output logic redirect_valid,
+    output riscv_pkg::word_t redirect_pc,
+    output riscv_pkg::ex_mem_t ex_mem_out
 );
-    
+
     import riscv_pkg::*;
 
+    // ================ internal signal ================
     alu_ctrl_t alu_ctrl;
     word_t operand_a, operand_b;
 
+
+    // ================== pass signal ==================
+    assign ex_mem_out.valid = id_ex_in.valid;
+    assign ex_mem_out.pc4   = id_ex_in.pc4;
+
+    assign ex_mem_out.store_data = id_ex_in.rs2_data;
+    assign ex_mem_out.rd_addr    = id_ex_in.rd_addr;
+
+    assign ex_mem_out.mem_ctrl = id_ex_in.mem_ctrl;
+    assign ex_mem_out.wb_ctrl  = id_ex_in.wb_ctrl;
+
+
+    // ==================== modules ====================
     alu_control_unit alu_control_unit (
-        .alu_op(control.alu_op),
-        .funct3(funct3),
-        .funct7(funct7),
+        // ========== input  ==========
+        .alu_op(id_ex_in.ex_ctrl.alu_op),
+        .funct3(id_ex_in.funct3),
+        .funct7(id_ex_in.funct7),
+        // ========== output ==========
         .alu_ctrl(alu_ctrl)
     );
 
     alu_mux alu_mux (
         // ========== input  ==========
-        .rs1(rs1_data),
-        .rs2(rs2_data),
-        .pc(pc),
-        .immediate(immediate),
-        .alu_src(control.alu_src),
+        .pc(id_ex_in.pc),
+        .rs1(id_ex_in.rs1_data),
+        .rs2(id_ex_in.rs2_data),
+        .immediate(id_ex_in.immediate),
+        .alu_src(id_ex_in.ex_ctrl.alu_src),
         // ========== output ==========
         .operand_a(operand_a),
         .operand_b(operand_b)
@@ -47,27 +56,14 @@ module ex_stage (
         .operand_b(operand_b),
         .alu_ctrl(alu_ctrl),
         // ========== output ==========
-        .result(alu_result)
+        .result(ex_mem_out.alu_result)
     );
 
-    // branch module
-    branch_comparator branch_comparator (
-        // ========== input  ==========
-        .rs1_data(rs1_data),
-        .rs2_data(rs2_data),
-        .funct3(funct3),
-        // ========== output ==========
-        .branch_taken(branch_taken)
-    );
-
-    target_generator target_generator (
-        // ========== input  ==========
-        .pc(pc),
-        .rs1_data(rs1_data),
-        .immediate(immediate),
-        .pc_sel(control.pc_sel),
-        // ========== output ==========
-        .target(target)
+    // pc_target module
+    pc_control_unit u_pc_control_unit (
+        .id_ex(id_ex_in),
+        .redirect_valid(redirect_valid),
+        .redirect_pc(redirect_pc)
     );
 
 endmodule

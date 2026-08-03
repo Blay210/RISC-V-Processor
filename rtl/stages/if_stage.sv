@@ -6,27 +6,31 @@ module if_stage #(
     // ============= input  =============
     input logic clk,
     input logic rst_n,
-    input logic branch_taken,
-    input riscv_pkg::word_t   control_target,
-    input riscv_pkg::pc_sel_t pc_sel,
+    input logic redirect_valid,
+    input riscv_pkg::word_t redirect_pc,
     
     // ============= output =============
-    output riscv_pkg::word_t raw_inst,
-    output riscv_pkg::word_t pc,
-    output riscv_pkg::word_t pc_4
+    output riscv_pkg::if_id_t if_id
 );
 
     import riscv_pkg::*;
 
-    word_t next_pc;
-    assign pc_4 = pc + word_t'(4);
+
+    // ================ internal signal ================
+    word_t pc, pc4, next_pc;
+
+
+    assign pc4 = pc + word_t'(4);
+    assign if_id.valid = 1;
+    assign if_id.pc    = pc;
+    assign if_id.pc4   = pc4;
+
     
     next_pc_logic next_pc_logic (
         // ========== input  ==========
-        .pc_4(pc_4),
-        .pc_sel(pc_sel),
-        .branch_taken(branch_taken),
-        .control_target(control_target),
+        .pc4(pc4),
+        .redirect_valid(redirect_valid),
+        .redirect_pc(redirect_pc),
         // ========== output ==========
         .next_pc(next_pc)
     );
@@ -46,7 +50,7 @@ module if_stage #(
         // ========== input  ==========
         .pc(pc),
         // ========== output ==========
-        .inst(raw_inst)
+        .inst(if_id.inst)
     );
 
 endmodule

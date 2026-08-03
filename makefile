@@ -16,11 +16,13 @@ PKG          := rtl/pkg/riscv_pkg.sv
 UNITS        := $(shell find rtl/units -type f -name "*.sv" | sort)
 MEMORIES     := $(shell find rtl/memories -type f -name "*.sv" | sort)
 STAGES       := $(shell find rtl/stages -type f -name "*.sv" | sort)
+PIPELINES    := $(shell find rtl/pipelines -type f -name "*.sv" | sort)
 
 RTL_FILES    := \
 	$(UNITS) \
 	$(MEMORIES) \
 	$(STAGES) \
+	$(PIPELINES) \
 	rtl/processor.sv
 
 TB_FILE      := sim/$(TOP).sv
@@ -40,6 +42,7 @@ VERILATOR_FLAGS := \
 	--sv \
 	--timing \
 	--trace-fst \
+	--trace-structs \
 	--top-module $(TOP) \
 	--Mdir $(OBJ_DIR) \
 	-Irtl \

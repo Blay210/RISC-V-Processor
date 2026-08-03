@@ -7,87 +7,119 @@ module processor (
 
     import riscv_pkg::*;
 
-    logic branch_taken;
+    logic redirect_valid;
+    word_t redirect_pc;
 
-    word_t target;
-    word_t raw_inst;
-    word_t pc, pc_4;
-    word_t rs1_data, rs2_data;
-    word_t immediate;
-    word_t alu_result;
-    word_t mem_read_data;
+    logic if_id_stall;
+    logic if_id_flush;
+    logic id_ex_stall;
+    logic id_ex_flush;
+    logic ex_mem_stall;
+    logic ex_mem_flush;
+    logic mem_wb_stall;
+    logic mem_wb_flush;
+
+    if_id_t if_id_d, if_id_q;
+    id_ex_t id_ex_d, id_ex_q;
+    ex_mem_t ex_mem_d, ex_mem_q;
+    mem_wb_t mem_wb_d, mem_wb_q;
+
     word_t wb_data;
-    reg_addr_t rd_addr;
-    
-    control_t control;
-    funct3_t funct3;
-    funct7_t funct7;
+
+    assign if_id_stall  = 1'b0;
+    assign id_ex_stall  = 1'b0;
+    assign ex_mem_stall = 1'b0;
+    assign mem_wb_stall = 1'b0;
+
+    assign if_id_flush  = redirect_valid;
+    assign id_ex_flush  = redirect_valid;
+    assign ex_mem_flush = 1'b0;
+    assign mem_wb_flush = 1'b0;
     
     if_stage #(
         .PROGRAM_FILE("rtl/programs/program.hex")
     ) u_if_stage (
-        // ========== input  ==========
         .clk(clk),
         .rst_n(rst_n),
-        .branch_taken(branch_taken),
-        .control_target(target),
-        .pc_sel(control.pc_sel),
+        // ========== input  ==========
+        .redirect_valid(redirect_valid),
+        .redirect_pc(redirect_pc),
         // ========== output ==========
-        .raw_inst(raw_inst),
-        .pc(pc),
-        .pc_4(pc_4)
+        .if_id(if_id_d)
+    );
+
+    if_id u_if_id (
+        .clk(clk),
+        .rst_n(rst_n),
+        .stall(if_id_stall),
+        .flush(if_id_flush),
+
+        .if_id_in(if_id_d),
+        .if_id_out(if_id_q)
     );
 
     id_stage u_id_stage (
-        // ========== input  ==========
         .clk(clk),
         .rst_n(rst_n),
-        .wb_reg_write(control.reg_write),
-        .raw_inst(raw_inst),
+        // ========== input  ==========
+        .if_id_in(if_id_q),
+        .mem_wb_in(mem_wb_q),
         .wb_rd_data(wb_data),
-        .wb_rd_addr(rd_addr),
         // ========== output ==========
-        .rs1_data(rs1_data),
-        .rs2_data(rs2_data),
-        .immediate(immediate),
-        .funct3(funct3),
-        .funct7(funct7),
-        .decoded_rd_addr(rd_addr),
-        .control(control)
+        .id_ex_out(id_ex_d)
+    );
+
+    id_ex u_id_ex (
+        .clk(clk),
+        .rst_n(rst_n),
+        .stall(id_ex_stall),
+        .flush(id_ex_flush),
+        
+        .id_ex_in(id_ex_d),
+        .id_ex_out(id_ex_q)
     );
 
     ex_stage u_ex_stage (
         // ========== input  ==========
-        .control(control),
-        .pc(pc),
-        .rs1_data(rs1_data),
-        .rs2_data(rs2_data),
-        .immediate(immediate),
-        .funct3(funct3),
-        .funct7(funct7),
+        .id_ex_in(id_ex_q),
         // ========== output ==========
-        .alu_result(alu_result),
-        .target(target),
-        .branch_taken(branch_taken)
+        .ex_mem_out(ex_mem_d),
+        .redirect_pc(redirect_pc),
+        .redirect_valid(redirect_valid)
+    );
+
+    ex_mem u_ex_mem (
+        .clk(clk),
+        .rst_n(rst_n),
+        .stall(ex_mem_stall),
+        .flush(ex_mem_flush),
+
+        .ex_mem_in(ex_mem_d),
+        .ex_mem_out(ex_mem_q)
     );
 
     mem_stage u_mem_stage (
-        // ========== input  ==========
         .clk(clk),
         .rst_n(rst_n),
-        .control(control),
-        .alu_result(alu_result),
-        .rs2_data(rs2_data),
+        // ========== input  ==========
+        .ex_mem_in(ex_mem_q),
         // ========== output ==========
-        .mem_read_data(mem_read_data)
+        .mem_wb_out(mem_wb_d)
+    );
+
+    mem_wb u_mem_wb (
+        .clk(clk),
+        .rst_n(rst_n),
+        .stall(mem_wb_stall),
+        .flush(mem_wb_flush),
+
+        .mem_wb_in(mem_wb_d),
+        .mem_wb_out(mem_wb_q)        
     );
 
     wb_stage u_wb_stage (
         // ============= input  =============
-        .alu_result(alu_result),
-        .mem_read_data(mem_read_data),
-        .pc_4(pc_4),
-        .control(control),
+        .mem_wb_in(mem_wb_q),
         // ============= output =============
         .wb_data(wb_data)
     );

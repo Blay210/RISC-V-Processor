@@ -2,10 +2,7 @@
 
 module wb_stage (
     // ============= input  =============
-    input riscv_pkg::word_t    alu_result,
-    input riscv_pkg::word_t    mem_read_data,
-    input riscv_pkg::word_t    pc_4,
-    input riscv_pkg::control_t control,
+    input riscv_pkg::mem_wb_t mem_wb_in,
     
     // ============= output =============
     output riscv_pkg::word_t   wb_data
@@ -15,10 +12,10 @@ module wb_stage (
     
     wb_mux wb_mux (
         // ========== input  ==========
-        .alu_result(alu_result),
-        .mem_read_data(mem_read_data),
-        .pc_4(pc_4),
-        .wb_sel(control.wb_sel),
+        .pc_4(mem_wb_in.pc4),
+        .alu_result(mem_wb_in.alu_result),
+        .mem_read_data(mem_wb_in.mem_data),
+        .wb_sel(mem_wb_in.wb_ctrl.wb_sel),
         // ========== output ==========
         .wb_data(wb_data)
     );
