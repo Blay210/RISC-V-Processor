@@ -4,7 +4,7 @@ BUILD_DIR    := build
 OBJ_DIR      := $(BUILD_DIR)/obj_dir
 WAVE_FILE    := $(BUILD_DIR)/cpu.fst
 
-PROGRAM      ?= sum
+PROGRAM      ?= program
 ASM_FILE     := programs/$(PROGRAM).S
 PROGRAM_OBJ  := $(BUILD_DIR)/$(PROGRAM).o
 PROGRAM_ELF  := $(BUILD_DIR)/$(PROGRAM).elf
@@ -13,11 +13,11 @@ PROGRAM_HEX  := rtl/programs/program.hex
 
 PKG          := rtl/pkg/riscv_pkg.sv
 
-UNITS        := $(shell find rtl/units -type f -name "*.sv" | sort)
-MEMORIES     := $(shell find rtl/memories -type f -name "*.sv" | sort)
-STAGES       := $(shell find rtl/stages -type f -name "*.sv" | sort)
-PIPELINES    := $(shell find rtl/pipelines -type f -name "*.sv" | sort)
-HAZARD       := $(shell find rtl/hazard -type f -name "*.sv" | sort)
+UNITS        := $(sort $(shell find rtl/units     -type f -name '*.sv' -print))
+MEMORIES     := $(sort $(shell find rtl/memories  -type f -name '*.sv' -print))
+STAGES       := $(sort $(shell find rtl/stages    -type f -name '*.sv' -print))
+PIPELINES    := $(sort $(shell find rtl/pipelines -type f -name '*.sv' -print))
+HAZARD       := $(sort $(shell find rtl/hazard    -type f -name '*.sv' -print))
 
 RTL_FILES    := \
 	$(UNITS) \
@@ -43,6 +43,7 @@ VERILATOR_FLAGS := \
 	--binary \
 	--sv \
 	--timing \
+	--assert \
 	--trace-fst \
 	--trace-structs \
 	--top-module $(TOP) \
@@ -51,7 +52,7 @@ VERILATOR_FLAGS := \
 	-Wall \
 	-Wno-fatal
 
-.PHONY: all program disasm lint compile run wave clean rebuild
+.PHONY: all program disasm lint compile run wave clean rebuild sources
 
 all: run
 
@@ -108,6 +109,13 @@ run: lint compile
 
 wave:
 	$(GTKWAVE) $(WAVE_FILE)
+
+# 실제 source 목록을 한 줄씩 확인
+sources:
+	@printf '%s\n' \
+		$(PKG) \
+		$(RTL_FILES) \
+		$(TB_FILE)
 
 clean:
 	rm -rf $(BUILD_DIR)

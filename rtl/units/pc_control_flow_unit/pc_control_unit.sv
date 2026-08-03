@@ -22,21 +22,24 @@ module pc_control_unit (
 
     always_comb begin
         redirect_valid = 1'b0;
-        redirect_pc    = pc_target;
+        redirect_pc    = '0;
 
         if (valid) begin
             unique case (pc_sel)
                 PC_NEXT_BRANCH: begin
                     redirect_valid = branch_taken;
+                    redirect_pc    = pc_target;
                 end
 
                 PC_NEXT_JAL,
                 PC_NEXT_JALR: begin
                     redirect_valid = 1'b1;
+                    redirect_pc    = pc_target;
                 end
 
                 default: begin
                     redirect_valid = 1'b0;
+                    redirect_pc    = '0;
                 end
             endcase
         end

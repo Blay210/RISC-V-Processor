@@ -22,14 +22,15 @@ module register_file (
     // registers x0 ~ x31
     word_t registers [0:REG_COUNT-1];
 
+    always_comb begin
+        if (rs1_addr == X0) rs1_data = '0;
+        else if (rd_addr == rs1_addr) rs1_data = rd_data;
+        else rs1_data = registers[rs1_addr];
 
-    assign rs1_data = (rs1_addr == X0) 
-                    ? '0 
-                    : registers[rs1_addr];
-
-    assign rs2_data = (rs2_addr == X0)
-                    ? '0 
-                    : registers[rs2_addr];
+        if (rs2_addr == X0) rs2_data = '0;
+        else if (rd_addr == rs2_addr) rs2_data = rd_data;
+        else rs2_data = registers[rs2_addr];
+    end
 
 
     always_ff @(posedge clk or negedge rst_n) begin
